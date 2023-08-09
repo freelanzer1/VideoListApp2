@@ -1,4 +1,4 @@
-package ru.freelanzer1.videolistapp2.ui.notes
+package ru.freelanzer1.videolistapp2.ui.video_list
 
 import ru.freelanzer1.videolistapp2.domain.model.Note
 import ru.freelanzer1.videolistapp2.domain.util.NoteOrder

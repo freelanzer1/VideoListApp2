@@ -12,7 +12,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import ru.freelanzer1.videolistapp2.ui.add_edit_note.AddEditNoteScreen
-import ru.freelanzer1.videolistapp2.ui.notes.NotesScreen
+import ru.freelanzer1.videolistapp2.ui.video_list.NotesScreen
 import ru.freelanzer1.videolistapp2.ui.util.Screen
 import dagger.hilt.android.AndroidEntryPoint
 import ru.freelanzer1.videolistapp2.ui.theme.VideoListAppTheme

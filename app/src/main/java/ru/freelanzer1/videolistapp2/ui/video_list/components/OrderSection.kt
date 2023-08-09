@@ -1,4 +1,4 @@
-package ru.freelanzer1.videolistapp2.ui.notes.components
+package ru.freelanzer1.videolistapp2.ui.video_list.components
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable

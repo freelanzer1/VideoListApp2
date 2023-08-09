@@ -1,4 +1,4 @@
-package ru.freelanzer1.videolistapp2.ui.notes
+package ru.freelanzer1.videolistapp2.ui.video_list
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf

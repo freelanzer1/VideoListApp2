@@ -1,4 +1,4 @@
-package ru.freelanzer1.videolistapp2.ui.notes
+package ru.freelanzer1.videolistapp2.ui.video_list
 
 import androidx.compose.animation.*
 import androidx.compose.foundation.background
@@ -18,8 +18,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import ru.freelanzer1.videolistapp2.ui.notes.components.NoteItem
-import ru.freelanzer1.videolistapp2.ui.notes.components.OrderSection
+import ru.freelanzer1.videolistapp2.ui.video_list.components.NoteItem
+import ru.freelanzer1.videolistapp2.ui.video_list.components.OrderSection
 import ru.freelanzer1.videolistapp2.ui.util.Screen
 import kotlinx.coroutines.launch
 
