@@ -2,19 +2,19 @@ package ru.freelanzer1.videolistapp2.di
 
 import android.app.Application
 import androidx.room.Room
-import ru.freelanzer1.videolistapp2.data.data_source.NoteDatabase
-import ru.freelanzer1.videolistapp2.data.repository.NoteRepositoryImpl
-import ru.freelanzer1.videolistapp2.domain.repository.NoteRepository
+import ru.freelanzer1.videolistapp2.data.data_source.AppDatabase
+import ru.freelanzer1.videolistapp2.data.repository.AlbumRepositoryImpl
+import ru.freelanzer1.videolistapp2.domain.repository.AlbumRepository
 import ru.freelanzer1.videolistapp2.domain.use_case.*
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import ru.freelanzer1.videolistapp2.domain.use_case.AddNote
-import ru.freelanzer1.videolistapp2.domain.use_case.DeleteNote
-import ru.freelanzer1.videolistapp2.domain.use_case.GetNote
-import ru.freelanzer1.videolistapp2.domain.use_case.GetNotes
-import ru.freelanzer1.videolistapp2.domain.use_case.NoteUseCases
+import ru.freelanzer1.videolistapp2.domain.use_case.AddAlbum
+import ru.freelanzer1.videolistapp2.domain.use_case.DeleteAlbum
+import ru.freelanzer1.videolistapp2.domain.use_case.GetAlbum
+import ru.freelanzer1.videolistapp2.domain.use_case.GetAlbums
+import ru.freelanzer1.videolistapp2.domain.use_case.AlbumUseCases
 import javax.inject.Singleton
 
 @Module
@@ -23,28 +23,28 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideNoteDatabase(app: Application): NoteDatabase {
+    fun provideAppDatabase(app: Application): AppDatabase {
         return Room.databaseBuilder(
             app,
-            NoteDatabase::class.java,
-            NoteDatabase.DATABASE_NAME
+            AppDatabase::class.java,
+            AppDatabase.DATABASE_NAME
         ).build()
     }
 
     @Provides
     @Singleton
-    fun provideNoteRepository(db: NoteDatabase): NoteRepository {
-        return NoteRepositoryImpl(db.noteDao)
+    fun provideAlbumRepository(db: AppDatabase): AlbumRepository {
+        return AlbumRepositoryImpl(db.albumDao)
     }
 
     @Provides
     @Singleton
-    fun provideNoteUseCases(repository: NoteRepository): NoteUseCases {
-        return NoteUseCases(
-            getNotes = GetNotes(repository),
-            deleteNote = DeleteNote(repository),
-            addNote = AddNote(repository),
-            getNote = GetNote(repository)
+    fun provideAlbumUseCases(repository: AlbumRepository): AlbumUseCases {
+        return AlbumUseCases(
+            getAlbums = GetAlbums(repository),
+            deleteAlbum = DeleteAlbum(repository),
+            addAlbum = AddAlbum(repository),
+            getAlbum = GetAlbum(repository)
         )
     }
 }

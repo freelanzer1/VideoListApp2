@@ -15,11 +15,11 @@ import androidx.compose.ui.graphics.drawscope.clipPath
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import ru.freelanzer1.videolistapp2.domain.model.Note
+import ru.freelanzer1.videolistapp2.domain.model.Album
 
 @Composable
-fun NoteItem(
-    note: Note,
+fun AlbumItem(
+    album: Album,
     modifier: Modifier = Modifier,
     cornerRadius: Dp = 10.dp,
     cutCornerSize: Dp = 30.dp,
@@ -39,13 +39,13 @@ fun NoteItem(
 
             clipPath(clipPath) {
                 drawRoundRect(
-                    color = Color(note.color),
+                    color = Color(album.color),
                     size = size,
                     cornerRadius = CornerRadius(cornerRadius.toPx())
                 )
 //                drawRoundRect(
 //                    color = Color(
-//                        ColorUtils.blendARGB(note.color, 0x000000, 0.2f)
+//                        ColorUtils.blendARGB(album.color, 0x000000, 0.2f)
 //                    ),
 //                    topLeft = Offset(size.width - cutCornerSize.toPx(), -100f),
 //                    size = Size(cutCornerSize.toPx() + 100f, cutCornerSize.toPx() + 100f),
@@ -60,7 +60,7 @@ fun NoteItem(
                 .padding(end = 32.dp)
         ) {
             Text(
-                text = note.title,
+                text = album.title,
                 style = MaterialTheme.typography.headlineMedium,
                 color = MaterialTheme.colorScheme.onSurface,
                 maxLines = 1,
@@ -68,7 +68,7 @@ fun NoteItem(
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = note.content,
+                text = album.description,
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.onSurface,
                 maxLines = 10,
@@ -81,7 +81,7 @@ fun NoteItem(
         ) {
             Icon(
                 imageVector = Icons.Default.Delete,
-                contentDescription = "Delete video note",
+                contentDescription = "Delete album",
                 tint = MaterialTheme.colorScheme.onSurface
             )
         }

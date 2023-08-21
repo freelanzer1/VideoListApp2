@@ -1,4 +1,4 @@
-package ru.freelanzer1.videolistapp2.ui.add_edit_note
+package ru.freelanzer1.videolistapp2.ui.add_edit_album
 
 import androidx.compose.animation.Animatable
 import androidx.compose.animation.core.tween
@@ -29,26 +29,26 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import ru.freelanzer1.videolistapp2.domain.model.Note
-import ru.freelanzer1.videolistapp2.ui.add_edit_note.components.TransparentHintTextField
+import ru.freelanzer1.videolistapp2.domain.model.Album
+import ru.freelanzer1.videolistapp2.ui.add_edit_album.components.TransparentHintTextField
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddEditNoteScreen(
+fun AddEditAlbumScreen(
     navController: NavController,
-    noteColor: Int,
-    viewModel: AddEditNoteViewModel = hiltViewModel()
+    albumColor: Int = -1,
+    viewModel: AddEditAlbumViewModel = hiltViewModel()
 ) {
-    val titleState = viewModel.noteTitle.value
-    val contentState = viewModel.noteContent.value
+    val titleState = viewModel.albumTitle.value
+    val contentState = viewModel.albumContent.value
 
     val snackbarHostState = remember { SnackbarHostState() }
 
-    val noteBackgroundAnimatable = remember {
+    val albumBackgroundAnimatable = remember {
         Animatable(
-            Color(if (noteColor != -1) noteColor else viewModel.noteColor.value)
+            Color(if (albumColor != -1) albumColor else viewModel.albumColor.value)
         )
     }
     val scope = rememberCoroutineScope()
@@ -56,12 +56,12 @@ fun AddEditNoteScreen(
     LaunchedEffect(key1 = true) {
         viewModel.eventFlow.collectLatest { event ->
             when(event) {
-                is AddEditNoteViewModel.UiEvent.ShowSnackbar -> {
+                is AddEditAlbumViewModel.UiEvent.ShowSnackbar -> {
                     snackbarHostState.showSnackbar(
                         message = event.message
                     )
                 }
-                is AddEditNoteViewModel.UiEvent.SaveNote -> {
+                is AddEditAlbumViewModel.UiEvent.SaveAlbum -> {
                     navController.navigateUp()
                 }
             }
@@ -72,11 +72,11 @@ fun AddEditNoteScreen(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-                    viewModel.onEvent(AddEditNoteEvent.SaveNote)
+                    viewModel.onEvent(AddEditAlbumEvent.SaveAlbum)
                 },
                 containerColor = MaterialTheme.colorScheme.primary
             ) {
-                Icon(imageVector = Icons.Default.Save, contentDescription = "Save note")
+                Icon(imageVector = Icons.Default.Save, contentDescription = "Save album")
             }
         },
         snackbarHost = { SnackbarHost(snackbarHostState) }
@@ -84,7 +84,7 @@ fun AddEditNoteScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                //.background(noteBackgroundAnimatable.value)
+                //.background(albumBackgroundAnimatable.value)
                 .padding(15.dp)
         ) {
             Row(
@@ -93,7 +93,7 @@ fun AddEditNoteScreen(
                     .padding(8.dp),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Note.noteColors.forEach { color ->
+                Album.albumColors.forEach { color ->
                     val colorInt = color.toArgb()
                     Box(
                         modifier = Modifier
@@ -103,21 +103,21 @@ fun AddEditNoteScreen(
                             .background(color)
                             .border(
                                 width = 3.dp,
-                                color = if (viewModel.noteColor.value == colorInt) {
+                                color = if (viewModel.albumColor.value == colorInt) {
                                     Color.Black
                                 } else Color.Transparent,
                                 shape = CircleShape
                             )
                             .clickable {
                                 scope.launch {
-                                    noteBackgroundAnimatable.animateTo(
+                                    albumBackgroundAnimatable.animateTo(
                                         targetValue = Color(colorInt),
                                         animationSpec = tween(
                                             durationMillis = 500
                                         )
                                     )
                                 }
-                                viewModel.onEvent(AddEditNoteEvent.ChangeColor(colorInt))
+                                viewModel.onEvent(AddEditAlbumEvent.ChangeColor(colorInt))
                             }
                     )
                 }
@@ -127,10 +127,10 @@ fun AddEditNoteScreen(
                 text = titleState.text,
                 hint = titleState.hint,
                 onValueChange = {
-                    viewModel.onEvent(AddEditNoteEvent.EnteredTitle(it))
+                    viewModel.onEvent(AddEditAlbumEvent.EnteredTitle(it))
                 },
                 onFocusChange = {
-                    viewModel.onEvent(AddEditNoteEvent.ChangeTitleFocus(it))
+                    viewModel.onEvent(AddEditAlbumEvent.ChangeTitleFocus(it))
                 },
                 isHintVisible = titleState.isHintVisible,
                 singleLine = true,
@@ -141,10 +141,10 @@ fun AddEditNoteScreen(
                 text = contentState.text,
                 hint = contentState.hint,
                 onValueChange = {
-                    viewModel.onEvent(AddEditNoteEvent.EnteredContent(it))
+                    viewModel.onEvent(AddEditAlbumEvent.EnteredContent(it))
                 },
                 onFocusChange = {
-                    viewModel.onEvent(AddEditNoteEvent.ChangeContentFocus(it))
+                    viewModel.onEvent(AddEditAlbumEvent.ChangeContentFocus(it))
                 },
                 isHintVisible = contentState.isHintVisible,
                 textStyle = MaterialTheme.typography.bodyMedium,

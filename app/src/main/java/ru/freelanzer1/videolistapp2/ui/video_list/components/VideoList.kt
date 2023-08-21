@@ -13,7 +13,7 @@ import androidx.compose.ui.unit.dp
 import ru.freelanzer1.videolistapp2.domain.model.Video
 
 @Composable
-private fun VideoList(
+public fun VideoList(
     modifier: Modifier,
     videos: List<Video>
 ) {

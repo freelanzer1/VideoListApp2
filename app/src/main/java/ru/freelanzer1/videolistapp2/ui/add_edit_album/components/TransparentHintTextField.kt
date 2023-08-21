@@ -1,4 +1,4 @@
-package ru.freelanzer1.videolistapp2.ui.add_edit_note.components
+package ru.freelanzer1.videolistapp2.ui.add_edit_album.components
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth

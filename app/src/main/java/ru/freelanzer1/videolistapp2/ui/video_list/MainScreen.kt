@@ -18,7 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import ru.freelanzer1.videolistapp2.ui.video_list.components.NoteItem
+import ru.freelanzer1.videolistapp2.ui.video_list.components.AlbumItem
 import ru.freelanzer1.videolistapp2.ui.video_list.components.OrderSection
 import ru.freelanzer1.videolistapp2.ui.util.Screen
 import kotlinx.coroutines.launch
@@ -26,9 +26,9 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @ExperimentalAnimationApi
 @Composable
-fun NotesScreen(
+fun MainScreen(
     navController: NavController,
-    viewModel: NotesViewModel = hiltViewModel()
+    viewModel: AlbumsViewModel = hiltViewModel()
 ) {
     val state = viewModel.state.value
     val snackbarHostState = remember { SnackbarHostState() }
@@ -38,11 +38,11 @@ fun NotesScreen(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-                    navController.navigate(Screen.AddEditNoteScreen.route)
+                    navController.navigate(Screen.AddEditAlbumScreen.route)
                 },
                 Modifier.background(MaterialTheme.colorScheme.background)
             ) {
-                Icon(imageVector = Icons.Default.Add, contentDescription = "Add note")
+                Icon(imageVector = Icons.Default.Add, contentDescription = "Add album")
             }
 
         },
@@ -64,7 +64,7 @@ fun NotesScreen(
                 )
                 IconButton(
                     onClick = {
-                        viewModel.onEvent(NotesEvent.ToggleOrderSection)
+                        viewModel.onEvent(AlbumsEvent.ToggleOrderSection)
                     },
                 ) {
                     Icon(
@@ -82,34 +82,35 @@ fun NotesScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(vertical = 16.dp),
-                    noteOrder = state.noteOrder,
+                    albumOrder = state.albumOrder,
                     onOrderChange = {
-                        viewModel.onEvent(NotesEvent.Order(it))
+                        viewModel.onEvent(AlbumsEvent.Order(it))
                     }
                 )
             }
             Spacer(modifier = Modifier.height(16.dp))
             LazyColumn(modifier = Modifier.fillMaxSize()) {
-                items(state.notes) { note ->
-                    NoteItem(
-                        note = note,
+                items(state.albums) { album ->
+                    AlbumItem(
+                        album = album,
                         modifier = Modifier
                             .fillMaxWidth()
                             .clickable {
                                 navController.navigate(
-                                    Screen.AddEditNoteScreen.route +
-                                            "?noteId=${note.id}&noteColor=${note.color}"
+                                    Screen.AddEditAlbumScreen.route +
+//                                            "?albumId=${album.id}&albumColor=${album.color}"
+                                            "?albumId=${album.id}"
                                 )
                             },
                         onDeleteClick = {
-                            viewModel.onEvent(NotesEvent.DeleteNote(note))
+                            viewModel.onEvent(AlbumsEvent.DeleteAlbum(album))
                             scope.launch {
                                 val result = snackbarHostState.showSnackbar(
-                                    message = "Note deleted",
+                                    message = "Album deleted",
                                     actionLabel = "Undo"
                                 )
                                 if(result == SnackbarResult.ActionPerformed) {
-                                    viewModel.onEvent(NotesEvent.RestoreNote)
+                                    viewModel.onEvent(AlbumsEvent.RestoreAlbum)
                                 }
                             }
                         }

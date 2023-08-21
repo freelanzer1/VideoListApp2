@@ -11,8 +11,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import ru.freelanzer1.videolistapp2.ui.add_edit_note.AddEditNoteScreen
-import ru.freelanzer1.videolistapp2.ui.video_list.NotesScreen
+import ru.freelanzer1.videolistapp2.ui.add_edit_album.AddEditAlbumScreen
+import ru.freelanzer1.videolistapp2.ui.video_list.MainScreen
 import ru.freelanzer1.videolistapp2.ui.util.Screen
 import dagger.hilt.android.AndroidEntryPoint
 import ru.freelanzer1.videolistapp2.ui.theme.VideoListAppTheme
@@ -30,33 +30,34 @@ class MainActivity : ComponentActivity() {
                     val navController = rememberNavController()
                     NavHost(
                         navController = navController,
-                        startDestination = Screen.NotesScreen.route
+                        startDestination = Screen.MainScreen.route
                     ) {
-                        composable(route = Screen.NotesScreen.route) {
-                            NotesScreen(navController = navController)
+                        composable(route = Screen.MainScreen.route) {
+                            MainScreen(navController = navController)
                         }
                         composable(
-                            route = Screen.AddEditNoteScreen.route +
-                                    "?noteId={noteId}&noteColor={noteColor}",
+                            route = Screen.AddEditAlbumScreen.route +
+                                    //"?albumId={albumId}&noteColor={noteColor}",
+                            "?albumId={albumId}",
                             arguments = listOf(
                                 navArgument(
-                                    name = "noteId"
+                                    name = "albumId"
                                 ) {
                                     type = NavType.IntType
                                     defaultValue = -1
                                 },
-                                navArgument(
-                                    name = "noteColor"
-                                ) {
-                                    type = NavType.IntType
-                                    defaultValue = -1
-                                },
+//                                navArgument(
+//                                    name = "noteColor"
+//                                ) {
+//                                    type = NavType.IntType
+//                                    defaultValue = -1
+//                                },
                             )
                         ) {
-                            val color = it.arguments?.getInt("noteColor") ?: -1
-                            AddEditNoteScreen(
+//                            val color = it.arguments?.getInt("noteColor") ?: -1
+                            AddEditAlbumScreen(
                                 navController = navController,
-                                noteColor = color
+ //                               noteColor = color
                             )
                         }
                     }

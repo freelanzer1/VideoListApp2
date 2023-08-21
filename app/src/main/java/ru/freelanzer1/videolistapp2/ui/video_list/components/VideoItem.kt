@@ -107,14 +107,14 @@ fun VideoItem(video: Video, focusedVideo: Boolean) {
 
             Text(
                 modifier = Modifier.padding(start = 8.dp, top = 2.dp, end = 8.dp, bottom = 0.dp),
-                text = video.title,
+                text = video.url,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Medium
             )
 
             Text(
                 modifier = Modifier.padding(start = 8.dp, top = 2.dp, end = 8.dp, bottom = 6.dp),
-                text = video.subtitle,
+                text = video.url,
                 fontSize = 12.sp,
                 fontWeight = FontWeight.Normal,
                 color = LocalContentColor.current.copy(.6f)

@@ -9,17 +9,18 @@ import ru.freelanzer1.videolistapp2.ui.theme.RedPink
 import ru.freelanzer1.videolistapp2.ui.theme.Violet
 
 @Entity
-data class Note(
+data class Album(
     val title: String,
-    val content: String,
+    val description: String,
     val timestamp: Long,
     val color: Int,
-    //Todo add video link
+    val srvId: String?,
+    val authorId: String,
     @PrimaryKey val id: Int? = null
 ) {
     companion object {
-        val noteColors = listOf(RedOrange, LightGreen, Violet, BabyBlue, RedPink)
+        val albumColors = listOf(RedOrange, LightGreen, Violet, BabyBlue, RedPink)
     }
 }
 
-class InvalidNoteException(message: String): Exception(message)
+class InvalidAlbumException(message: String): Exception(message)

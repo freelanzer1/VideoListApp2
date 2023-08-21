@@ -1,6 +1,6 @@
-package ru.freelanzer1.videolistapp2.ui.add_edit_note
+package ru.freelanzer1.videolistapp2.ui.add_edit_album
 
-data class NoteTextFieldState(
+data class AlbumTextFieldState(
     val text: String = "",
     val hint: String = "",
     val isHintVisible: Boolean = true
