@@ -48,7 +48,9 @@ fun VideoPlayer(
     onSingleTap: (exoPlayer: ExoPlayer) -> Unit,
     onDoubleTap: (exoPlayer: ExoPlayer, offset: Offset) -> Unit,
     onVideoDispose: () -> Unit = {},
-    onVideoGoBackground: () -> Unit = {}
+    onVideoGoBackground: () -> Unit = {},
+    addUpVideoList: (() -> Unit)? = null,
+    pageCount: Int
 ) {
     val context = LocalContext.current
     var thumbnail by remember {
@@ -67,6 +69,9 @@ fun VideoPlayer(
                 thumbnail = thumbnail.copy(first = bm, second = thumbnail.second)
             }
         }
+    }
+    if (pagerState.settledPage == pageCount -1 && addUpVideoList != null){
+        addUpVideoList();
     }
     if (pagerState.settledPage == pageIndex) {
         val exoPlayer = remember(context) {

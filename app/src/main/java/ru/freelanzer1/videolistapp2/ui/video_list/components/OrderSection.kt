@@ -1,6 +1,8 @@
 package ru.freelanzer1.videolistapp2.ui.video_list.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -14,8 +16,9 @@ fun OrderSection(
     onOrderChange: (AlbumOrder) -> Unit
 ) {
     Column(
-        modifier = modifier
+        modifier = modifier.background(MaterialTheme.colorScheme.background)
     ) {
+        //Spacer(modifier = Modifier.height(16.dp))
         Row(
             modifier = Modifier.fillMaxWidth()
         ) {

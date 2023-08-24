@@ -42,6 +42,7 @@ object AppModule {
     fun provideAlbumUseCases(repository: AlbumRepository): AlbumUseCases {
         return AlbumUseCases(
             getAlbums = GetAlbums(repository),
+            getRandomVideos = GetRandomVideos(),
             deleteAlbum = DeleteAlbum(repository),
             addAlbum = AddAlbum(repository),
             getAlbum = GetAlbum(repository)

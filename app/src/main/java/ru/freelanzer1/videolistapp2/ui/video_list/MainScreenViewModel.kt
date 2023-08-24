@@ -1,6 +1,7 @@
 package ru.freelanzer1.videolistapp2.ui.video_list
 
 import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -13,22 +14,31 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import ru.freelanzer1.videolistapp2.domain.model.Video
 import javax.inject.Inject
 
 @HiltViewModel
-class AlbumsViewModel @Inject constructor(
+class MainScreenViewModel @Inject constructor(
     private val albumUseCases: AlbumUseCases
 ) : ViewModel() {
 
     private val _state = mutableStateOf(AlbumsState())
     val state: State<AlbumsState> = _state
 
+    private val _videoListState = mutableStateListOf<Video>() //ToDo remove to collectAsState? or collectAsStateWithLifecycle
+    val videoListState: List<Video> = _videoListState
+
+
+
     private var recentlyDeletedAlbum: Album? = null
 
     private var getAlbumsJob: Job? = null
 
+    private var getVideosJob: Job? = null
+
     init {
         getAlbums(AlbumOrder.Date(OrderType.Descending))
+        addUpVideoList()
     }
 
     fun onEvent(event: AlbumsEvent) {
@@ -69,6 +79,15 @@ class AlbumsViewModel @Inject constructor(
                     albums = albums,
                     albumOrder = albumOrder
                 )
+            }
+            .launchIn(viewModelScope)
+    }
+
+    fun addUpVideoList() {
+        getVideosJob?.cancel()
+        getVideosJob = albumUseCases.getRandomVideos()
+            .onEach { videos ->
+                _videoListState.addAll(videos)
             }
             .launchIn(viewModelScope)
     }

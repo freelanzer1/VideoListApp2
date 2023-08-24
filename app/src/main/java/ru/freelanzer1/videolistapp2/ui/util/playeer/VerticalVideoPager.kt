@@ -17,11 +17,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
@@ -35,7 +32,6 @@ import ru.freelanzer1.videeolistapp2.R
 import ru.freelanzer1.videolistapp2.domain.model.Video
 import ru.freelanzer1.videolistapp2.ui.util.extension.Space
 import ru.freelanzer1.videolistapp2.ui.util.videos
-import ru.freelanzer1.videolistapp2.ui.video_list.ExoPlayerScreenSkeleton
 
 @Preview
 @Composable
@@ -53,6 +49,7 @@ fun VerticalVideoPager(
     modifier: Modifier = Modifier,
     videos: List<Video>,
     initialPage: Int? = 0,
+    addUpVideoList: (() -> Unit)? = null
 //    showUploadDate: Boolean = false,
     //onclickComment: (videoId: String) -> Unit,
 //    onClickLike: (videoId: String, likeStatus: Boolean) -> Unit,
@@ -105,8 +102,9 @@ fun VerticalVideoPager(
                     }
                 },
                 onVideoDispose = { pauseButtonVisibility = false },
-                onVideoGoBackground = { pauseButtonVisibility = false }
-
+                onVideoGoBackground = { pauseButtonVisibility = false },
+                addUpVideoList = addUpVideoList,
+                pageCount = videos.size
             )
 
 
@@ -130,7 +128,7 @@ fun VerticalVideoPager(
                     SideItems(
                         modifier = Modifier,
                         videos[it],
-                        doubleTabState = doubleTapState,
+                        doubleTabState = doubleTapState
 //                        onclickComment = onclickComment,
 //                        onClickUser = onClickUser,
 //                        onClickFavourite = onClickFavourite,
@@ -195,7 +193,7 @@ fun VerticalVideoPager(
 fun SideItems(
     modifier: Modifier,
     item: Video,
-    doubleTabState: Triple<Offset, Boolean, Float>,
+    doubleTabState: Triple<Offset, Boolean, Float>
     //onclickComment: (videoId: String) -> Unit,
 //    onClickUser: (userId: Long) -> Unit,
 //    onClickShare: (() -> Unit)? = null,
