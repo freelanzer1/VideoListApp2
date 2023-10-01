@@ -7,7 +7,7 @@ sealed class AddEditAlbumEvent{
     data class ChangeTitleFocus(val focusState: FocusState): AddEditAlbumEvent()
     data class EnteredContent(val value: String): AddEditAlbumEvent()
     data class ChangeContentFocus(val focusState: FocusState): AddEditAlbumEvent()
-    data class ChangeColor(val color: Int): AddEditAlbumEvent()
+    //data class ChangeColor(val color: Int): AddEditAlbumEvent()
     object SaveAlbum: AddEditAlbumEvent()
 }
 

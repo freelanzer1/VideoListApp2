@@ -19,25 +19,30 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.*
+import coil.request.ImageRequest
 import ru.freelanzer1.videolistapp2.ui.theme.*
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import ru.freelanzer1.videeolistapp2.R
+import ru.freelanzer1.videolistapp2.domain.model.Image
+import ru.freelanzer1.videolistapp2.domain.model.MediaItem
 import ru.freelanzer1.videolistapp2.domain.model.Video
+import ru.freelanzer1.videolistapp2.ui.util.audioAndVideo
 import ru.freelanzer1.videolistapp2.ui.util.extension.Space
-import ru.freelanzer1.videolistapp2.ui.util.videos
+import ru.freelanzer1.videolistapp2.ui.util.photo
 
 @Preview
 @Composable
-fun PlayerScreenPreview() {
-    VideoListAppTheme {
-        VerticalVideoPager(videos = videos)
+fun PlayerScreen_Preview() {
+    ExtendedTheme {
+        VerticalPager(items = audioAndVideo)
     }
 }
 
@@ -45,9 +50,9 @@ fun PlayerScreenPreview() {
 @OptIn(ExperimentalFoundationApi::class, ExperimentalAnimationApi::class)
 @androidx.annotation.OptIn(androidx.media3.common.util.UnstableApi::class)
 @Composable
-fun VerticalVideoPager(
+fun VerticalPager(
     modifier: Modifier = Modifier,
-    videos: List<Video>,
+    items: List<MediaItem>,
     initialPage: Int? = 0,
     addUpVideoList: (() -> Unit)? = null
 //    showUploadDate: Boolean = false,
@@ -70,7 +75,7 @@ fun VerticalVideoPager(
     )
 
     VerticalPager(
-        pageCount = videos.size,
+        pageCount = items.size,
         state = pagerState,
         flingBehavior = fling,
         beyondBoundsPageCount = 1,
@@ -87,56 +92,89 @@ fun VerticalVideoPager(
             )
         }
 
-        Box(modifier = Modifier.fillMaxSize()) {
-            VideoPlayer(videos[it], pagerState, it, onSingleTap = {
-                pauseButtonVisibility = it.isPlaying
-                it.playWhenReady = !it.isPlaying
-            },
-                onDoubleTap = { exoPlayer, offset ->
-                    coroutineScope.launch {
-                        videos[it].currentViewerInteraction.isLikedByYou = true
-                        val rotationAngle = (-10..10).random()
-                        doubleTapState = Triple(offset, true, rotationAngle.toFloat())
-                        delay(400)
-                        doubleTapState = Triple(offset, false, rotationAngle.toFloat())
-                    }
-                },
-                onVideoDispose = { pauseButtonVisibility = false },
-                onVideoGoBackground = { pauseButtonVisibility = false },
-                addUpVideoList = addUpVideoList,
-                pageCount = videos.size
-            )
+        Box(modifier = Modifier.fillMaxSize().background(color = Color.Black)) {
 
-
-            Column(modifier = Modifier.align(Alignment.BottomCenter)) {
-                Row(
-                    Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 12.dp),
-                    verticalAlignment = Alignment.Bottom,
-                ) {
-//                    FooterUi(
-//                        modifier = Modifier
-//                            .fillMaxWidth()
-//                            .weight(1f),
-//                        item = videos[it],
-//                        showUploadDate=showUploadDate,
-//                        onClickAudio = onClickAudio,
-//                        onClickUser = onClickUser,
-//                    )
-
-                    SideItems(
-                        modifier = Modifier,
-                        videos[it],
-                        doubleTabState = doubleTapState
-//                        onclickComment = onclickComment,
-//                        onClickUser = onClickUser,
-//                        onClickFavourite = onClickFavourite,
-//                        onClickShare = onClickShare
+            val currentVideo = items[it] as? Video
+            if (currentVideo != null) {
+                Box (modifier = Modifier.fillMaxWidth()){
+                    VideoPlayer(
+                        currentVideo, pagerState, it, onSingleTap = {
+                            pauseButtonVisibility = it.isPlaying
+                            it.playWhenReady = !it.isPlaying
+                        },
+                        onDoubleTap = { exoPlayer, offset ->
+                            coroutineScope.launch {
+                                items[it].currentViewerInteraction.isLikedByYou = true
+                                val rotationAngle = (-10..10).random()
+                                doubleTapState = Triple(offset, true, rotationAngle.toFloat())
+                                delay(400)
+                                doubleTapState = Triple(offset, false, rotationAngle.toFloat())
+                            }
+                        },
+                        onVideoDispose = { pauseButtonVisibility = false },
+                        onVideoGoBackground = { pauseButtonVisibility = false },
+                        addUpVideoList = addUpVideoList,
+                        pageCount = items.size
                     )
                 }
-                12.dp.Space()
+            }else{
+                val image = items[it] as? Image
+                val painter = rememberAsyncImagePainter(
+                    ImageRequest
+                        .Builder(LocalContext.current)
+                        .data(data = image?.srvUrl)
+                        .build()
+                )
+                Box(modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.Black),
+                    contentAlignment = Alignment.Center,
+                ){
+                    Image(
+                        painter = painter,
+                        contentDescription = null,
+                        modifier = Modifier
+                            //.padding(5.dp)
+                            .fillMaxWidth(),
+                        contentScale = ContentScale.Crop
+                    )
+                }
             }
+
+            if (pagerState.settledPage == items.size -1 && addUpVideoList != null){
+                addUpVideoList();
+            }
+
+
+//            Column(modifier = Modifier.align(Alignment.BottomCenter)) {
+//                Row(
+//                    Modifier
+//                        .fillMaxWidth()
+//                        .padding(horizontal = 12.dp),
+//                    verticalAlignment = Alignment.Bottom,
+//                ) {
+////                    FooterUi(
+////                        modifier = Modifier
+////                            .fillMaxWidth()
+////                            .weight(1f),
+////                        item = videos[it],
+////                        showUploadDate=showUploadDate,
+////                        onClickAudio = onClickAudio,
+////                        onClickUser = onClickUser,
+////                    )
+//
+////                    SideItems(
+////                        modifier = Modifier,
+////                        videos[it],
+////                        doubleTabState = doubleTapState
+//////                        onclickComment = onclickComment,
+//////                        onClickUser = onClickUser,
+//////                        onClickFavourite = onClickFavourite,
+//////                        onClickShare = onClickShare
+////                    )
+//                }
+//                12.dp.Space()
+//            }
 
 
             AnimatedVisibility(

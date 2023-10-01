@@ -20,14 +20,14 @@ class GetAlbums(
                     when(albumOrder) {
                         is AlbumOrder.Title -> albums.sortedBy { it.title.lowercase() }
                         is AlbumOrder.Date -> albums.sortedBy { it.timestamp }
-                        is AlbumOrder.Color -> albums.sortedBy { it.color }
+                        //is AlbumOrder.Color -> albums.sortedBy { it.color }
                     }
                 }
                 is OrderType.Descending -> {
                     when(albumOrder) {
                         is AlbumOrder.Title -> albums.sortedByDescending { it.title.lowercase() }
                         is AlbumOrder.Date -> albums.sortedByDescending { it.timestamp }
-                        is AlbumOrder.Color -> albums.sortedByDescending { it.color }
+                        //is AlbumOrder.Color -> albums.sortedByDescending { it.color }
                     }
                 }
             }

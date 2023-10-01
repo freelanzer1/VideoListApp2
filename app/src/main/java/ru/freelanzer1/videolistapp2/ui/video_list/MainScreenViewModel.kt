@@ -14,7 +14,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import ru.freelanzer1.videolistapp2.domain.model.Video
+import ru.freelanzer1.videolistapp2.domain.model.MediaItem
 import javax.inject.Inject
 
 @HiltViewModel
@@ -25,8 +25,8 @@ class MainScreenViewModel @Inject constructor(
     private val _state = mutableStateOf(AlbumsState())
     val state: State<AlbumsState> = _state
 
-    private val _videoListState = mutableStateListOf<Video>() //ToDo remove to collectAsState? or collectAsStateWithLifecycle
-    val videoListState: List<Video> = _videoListState
+    private val _mediaListState = mutableStateListOf<MediaItem>() //ToDo remove to collectAsState? or collectAsStateWithLifecycle
+    val mediaListState: List<MediaItem> = _mediaListState
 
 
 
@@ -38,7 +38,7 @@ class MainScreenViewModel @Inject constructor(
 
     init {
         getAlbums(AlbumOrder.Date(OrderType.Descending))
-        addUpVideoList()
+        addUpMediaList()
     }
 
     fun onEvent(event: AlbumsEvent) {
@@ -83,11 +83,11 @@ class MainScreenViewModel @Inject constructor(
             .launchIn(viewModelScope)
     }
 
-    fun addUpVideoList() {
+    fun addUpMediaList() {
         getVideosJob?.cancel()
         getVideosJob = albumUseCases.getRandomVideos()
-            .onEach { videos ->
-                _videoListState.addAll(videos)
+            .onEach { items ->
+                _mediaListState.addAll(items)
             }
             .launchIn(viewModelScope)
     }

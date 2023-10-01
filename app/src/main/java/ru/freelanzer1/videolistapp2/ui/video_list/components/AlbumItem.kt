@@ -37,21 +37,21 @@ fun AlbumItem(
                 close()
             }
 
-            clipPath(clipPath) {
-                drawRoundRect(
-                    color = Color(album.color),
-                    size = size,
-                    cornerRadius = CornerRadius(cornerRadius.toPx())
-                )
+//            clipPath(clipPath) {
 //                drawRoundRect(
-//                    color = Color(
-//                        ColorUtils.blendARGB(album.color, 0x000000, 0.2f)
-//                    ),
-//                    topLeft = Offset(size.width - cutCornerSize.toPx(), -100f),
-//                    size = Size(cutCornerSize.toPx() + 100f, cutCornerSize.toPx() + 100f),
+//                    //color = Color(album.color),
+//                    size = size,
 //                    cornerRadius = CornerRadius(cornerRadius.toPx())
 //                )
-            }
+////                drawRoundRect(
+////                    color = Color(
+////                        ColorUtils.blendARGB(album.color, 0x000000, 0.2f)
+////                    ),
+////                    topLeft = Offset(size.width - cutCornerSize.toPx(), -100f),
+////                    size = Size(cutCornerSize.toPx() + 100f, cutCornerSize.toPx() + 100f),
+////                    cornerRadius = CornerRadius(cornerRadius.toPx())
+////                )
+//            }
         }
         Column(
             modifier = Modifier

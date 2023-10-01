@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import androidx.compose.animation.*
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Sort
@@ -17,9 +18,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import ru.freelanzer1.videolistapp2.ui.theme.ExtendedTheme
 import ru.freelanzer1.videolistapp2.ui.video_list.components.OrderSection
 import ru.freelanzer1.videolistapp2.ui.util.Screen
-import ru.freelanzer1.videolistapp2.ui.util.playeer.VerticalVideoPager
+import ru.freelanzer1.videolistapp2.ui.util.playeer.VerticalPager
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -29,71 +31,89 @@ fun MainScreen(
     navController: NavController,
     viewModelAlbum: MainScreenViewModel = hiltViewModel(),
 ) {
-    val state = viewModelAlbum.state.value
-    val videoState = remember { viewModelAlbum.videoListState }
-    val snackbarHostState = remember { SnackbarHostState() }
-    val scope = rememberCoroutineScope()
 
-    val addUpVideoList = { viewModelAlbum.addUpVideoList()}
+    Surface (
+        color = MaterialTheme.colorScheme.background
+    ) {
+        val state = viewModelAlbum.state.value
+        val mediaItemsState = remember { viewModelAlbum.mediaListState }
+        val snackbarHostState = remember { SnackbarHostState() }
+        val scope = rememberCoroutineScope()
 
-    Scaffold(
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = {
-                    navController.navigate(Screen.AddEditAlbumScreen.route)
-                },
-            ) {
-                Icon(imageVector = Icons.Default.Add, contentDescription = "Add album")
-            }
-
-        },
-        snackbarHost = { SnackbarHost(snackbarHostState) }
-    ) { padding ->
-
-        Box(modifier = Modifier.fillMaxSize()) {
-            VerticalVideoPager(videos = videoState.toList(), addUpVideoList = addUpVideoList)
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .align(Alignment.TopCenter)
-                //.padding(15.dp)
-            ) {
-                val bgColorL = if(state.isOrderSectionVisible)  MaterialTheme.colorScheme.background else Color.Transparent
-                Row(
-                    modifier = Modifier.fillMaxWidth().background(bgColorL),
-                    horizontalArrangement = Arrangement.End,
-                    verticalAlignment = Alignment.CenterVertically
+        val addUpVideoList = { viewModelAlbum.addUpMediaList() }
+        Scaffold(
+            floatingActionButton = {
+                FloatingActionButton(
+                    onClick = {
+                        navController.navigate(Screen.AddEditAlbumScreen.route)
+                    },
+                    shape = CircleShape,
                 ) {
+                    Icon(imageVector = Icons.Default.Add, contentDescription = "Add album")
+                }
+
+            },
+            snackbarHost = { SnackbarHost(snackbarHostState) }
+        ) { padding ->
+
+            //Box(modifier = Modifier
+            //            //.padding(15.dp)
+            //            .statusBarsPadding()
+            //            .navigationBarsPadding()
+            //            .imePadding() // padding for the bottom for the IME
+            //            .imeNestedScroll() // scroll IME at the bottom
+            //            ) {
+
+            Box(modifier = Modifier
+                .statusBarsPadding()
+                .navigationBarsPadding()
+                .imePadding() // padding for the bottom for the IME
+                .fillMaxSize()) {
+                VerticalPager(items = mediaItemsState.toList(), addUpVideoList = addUpVideoList)
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .align(Alignment.TopCenter)
+                    //.padding(15.dp)
+                ) {
+                    val bgColorL =
+                        if (state.isOrderSectionVisible) MaterialTheme.colorScheme.background else Color.Transparent
+                    Row(
+                        modifier = Modifier.fillMaxWidth().background(bgColorL),
+                        horizontalArrangement = Arrangement.End,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
 //                    Text(
 //                        text = "Your video with tags",
 //                        style = MaterialTheme.typography.bodyLarge
 //                    )
-                    IconButton(
-                        onClick = {
-                            viewModelAlbum.onEvent(AlbumsEvent.ToggleOrderSection)
-                        },
+                        IconButton(
+                            onClick = {
+                                viewModelAlbum.onEvent(AlbumsEvent.ToggleOrderSection)
+                            },
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Sort,
+                                tint = MaterialTheme.colorScheme.primary,
+                                contentDescription = "Sort"
+                            )
+                        }
+                    }
+                    AnimatedVisibility(
+                        visible = state.isOrderSectionVisible,
+                        enter = fadeIn() + slideInVertically(),
+                        exit = fadeOut() + slideOutVertically()
                     ) {
-                        Icon(
-                            imageVector = Icons.Default.Sort,
-                            contentDescription = "Sort"
+                        OrderSection(
+                            modifier = Modifier
+                                .fillMaxWidth(),
+                            albumOrder = state.albumOrder,
+                            onOrderChange = {
+                                viewModelAlbum.onEvent(AlbumsEvent.Order(it))
+                            }
                         )
                     }
-                }
-                AnimatedVisibility(
-                    visible = state.isOrderSectionVisible,
-                    enter = fadeIn() + slideInVertically(),
-                    exit = fadeOut() + slideOutVertically()
-                ) {
-                    OrderSection(
-                        modifier = Modifier
-                            .fillMaxWidth(),
-                        albumOrder = state.albumOrder,
-                        onOrderChange = {
-                            viewModelAlbum.onEvent(AlbumsEvent.Order(it))
-                        }
-                    )
-                }
-                Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(modifier = Modifier.height(16.dp))
 //            LazyColumn(modifier = Modifier.fillMaxSize()) {
 //                items(state.albums) { album ->
 //                    AlbumItem(
@@ -124,6 +144,7 @@ fun MainScreen(
 //                }
 //            }
 
+                }
             }
         }
     }

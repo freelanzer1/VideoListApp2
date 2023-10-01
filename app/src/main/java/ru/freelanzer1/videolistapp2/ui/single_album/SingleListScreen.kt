@@ -7,8 +7,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.hilt.navigation.compose.hiltViewModel
-import ru.freelanzer1.videolistapp2.ui.theme.VideoListAppTheme
-import ru.freelanzer1.videolistapp2.ui.util.playeer.VerticalVideoPager
+import ru.freelanzer1.videolistapp2.ui.theme.ExtendedTheme
+import ru.freelanzer1.videolistapp2.ui.util.playeer.VerticalPager
 
 
 @Composable
@@ -28,7 +28,7 @@ fun VideoListScreen(
     val updateVM = { viewModel.fetchVideos()}
 
 
-    VideoListAppTheme {
-        VerticalVideoPager(videos = videoState.toList(), addUpVideoList =  updateVM)
+    ExtendedTheme {
+        VerticalPager(items = videoState.toList(), addUpVideoList =  updateVM)
     }
 }

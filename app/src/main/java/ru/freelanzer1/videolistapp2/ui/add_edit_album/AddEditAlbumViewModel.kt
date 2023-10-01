@@ -23,7 +23,7 @@ class AddEditAlbumViewModel @Inject constructor(
 
     private val _albumTitle = mutableStateOf(
         AlbumTextFieldState(
-        hint = "Enter video title..."
+        hint = "Enter album title..."
     )
     )
     val albumTitle: State<AlbumTextFieldState> = _albumTitle
@@ -35,8 +35,8 @@ class AddEditAlbumViewModel @Inject constructor(
     )
     val albumContent: State<AlbumTextFieldState> = _albumContent
 
-    private val _albumColor = mutableStateOf(Album.albumColors.random().toArgb())
-    val albumColor: State<Int> = _albumColor
+    //private val _albumColor = mutableStateOf(Album.albumColors.random().toArgb())
+    //val albumColor: State<Int> = _albumColor
 
     private val _eventFlow = MutableSharedFlow<UiEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
@@ -57,7 +57,7 @@ class AddEditAlbumViewModel @Inject constructor(
                             text = album.description,
                             isHintVisible = false
                         )
-                        _albumColor.value = album.color
+                        //_albumColor.value = album.color
                     }
                 }
             }
@@ -88,9 +88,9 @@ class AddEditAlbumViewModel @Inject constructor(
                             _albumContent.value.text.isBlank()
                 )
             }
-            is AddEditAlbumEvent.ChangeColor -> {
-                _albumColor.value = event.color
-            }
+//            is AddEditAlbumEvent.ChangeColor -> {
+//                _albumColor.value = event.color
+//            }
             is AddEditAlbumEvent.SaveAlbum -> {
                 viewModelScope.launch {
                     try {
@@ -99,7 +99,7 @@ class AddEditAlbumViewModel @Inject constructor(
                                 title = albumTitle.value.text,
                                 description = albumContent.value.text,
                                 timestamp = System.currentTimeMillis(),
-                                color = albumColor.value,
+                                //color = albumColor.value,
                                 id = currentAlbumId,
                                 authorId = "0",
                                 srvId = null

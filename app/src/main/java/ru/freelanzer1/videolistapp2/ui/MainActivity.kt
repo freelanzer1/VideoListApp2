@@ -1,11 +1,13 @@
 package ru.freelanzer1.videolistapp2.ui
 
 import android.os.Bundle
+import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.core.view.WindowCompat
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -15,17 +17,18 @@ import ru.freelanzer1.videolistapp2.ui.add_edit_album.AddEditAlbumScreen
 import ru.freelanzer1.videolistapp2.ui.video_list.MainScreen
 import ru.freelanzer1.videolistapp2.ui.util.Screen
 import dagger.hilt.android.AndroidEntryPoint
-import ru.freelanzer1.videolistapp2.ui.theme.VideoListAppTheme
+import ru.freelanzer1.videolistapp2.ui.theme.ExtendedTheme
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     @ExperimentalAnimationApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        WindowCompat.setDecorFitsSystemWindows(window, false)
         setContent {
-            VideoListAppTheme {
+            ExtendedTheme () {
                 Surface(
-                    color = MaterialTheme.colorScheme.background
+                    //color = MaterialTheme.colorScheme.background
                 ) {
                     val navController = rememberNavController()
                     NavHost(

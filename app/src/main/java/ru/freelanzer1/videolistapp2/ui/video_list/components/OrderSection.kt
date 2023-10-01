@@ -33,12 +33,12 @@ fun OrderSection(
                 selected = albumOrder is AlbumOrder.Date,
                 onSelect = { onOrderChange(AlbumOrder.Date(albumOrder.orderType)) }
             )
-            Spacer(modifier = Modifier.width(8.dp))
-            DefaultRadioButton(
-                text = "Color",
-                selected = albumOrder is AlbumOrder.Color,
-                onSelect = { onOrderChange(AlbumOrder.Color(albumOrder.orderType)) }
-            )
+//            Spacer(modifier = Modifier.width(8.dp))
+//            DefaultRadioButton(
+//                text = "Color",
+//                selected = albumOrder is AlbumOrder.Color,
+//                onSelect = { onOrderChange(AlbumOrder.Color(albumOrder.orderType)) }
+//            )
         }
         Spacer(modifier = Modifier.height(16.dp))
         Row(
