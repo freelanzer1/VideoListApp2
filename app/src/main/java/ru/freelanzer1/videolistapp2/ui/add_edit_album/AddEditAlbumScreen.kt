@@ -1,5 +1,6 @@
 package ru.freelanzer1.videolistapp2.ui.add_edit_album
 
+import android.net.Uri
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
@@ -33,6 +34,14 @@ fun AddEditAlbumScreen(
 ) {
     val titleState = viewModel.albumTitle.value
     val contentState = viewModel.albumContent.value
+
+    val addedFileUris = remember { viewModel.addedFileUris }
+
+
+
+    val addElements = { items: List<Pair<Uri, String?>>  ->
+        viewModel.addElements(items)
+    }
 
     val snackbarHostState = remember { SnackbarHostState() }
 
@@ -156,7 +165,12 @@ fun AddEditAlbumScreen(
                     //modifier = Modifier.fillMaxHeight()
                 )
                 Spacer(modifier = Modifier.height(16.dp))
-                FilePickerComponent()
+                FilePickerComponent(
+                    addedFileUris, addElements,
+                    selectItem = { pos: Int, selected: Boolean ->
+                        viewModel.onEvent(AddEditAlbumEvent.SelectItem(pos, selected))
+                    }
+                )
             }
         }
     }

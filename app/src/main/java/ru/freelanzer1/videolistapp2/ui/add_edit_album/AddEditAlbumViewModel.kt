@@ -1,8 +1,9 @@
 package ru.freelanzer1.videolistapp2.ui.add_edit_album
 
+import android.net.Uri
 import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.ui.graphics.toArgb
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -34,6 +35,14 @@ class AddEditAlbumViewModel @Inject constructor(
     )
     )
     val albumContent: State<AlbumTextFieldState> = _albumContent
+
+
+    private val _addedFileUris = mutableStateListOf<AlbumMediaItemState>()
+    val addedFileUris: List<AlbumMediaItemState> = _addedFileUris
+    fun addElements(items: List<Pair<Uri, String?>>) {
+        val itemStateList: List<AlbumMediaItemState> = items.map { AlbumMediaItemState(it.first, it.second)}
+        _addedFileUris.addAll(itemStateList)
+    }
 
     //private val _albumColor = mutableStateOf(Album.albumColors.random().toArgb())
     //val albumColor: State<Int> = _albumColor
@@ -71,6 +80,17 @@ class AddEditAlbumViewModel @Inject constructor(
                     text = event.value
                 )
             }
+            is AddEditAlbumEvent.SelectItem -> {
+                _addedFileUris[event.item] = _addedFileUris[event.item].copy(selected = event.selected)
+
+                viewModelScope.launch {
+                    _eventFlow.emit(
+                        UiEvent.ShowSnackbar(
+                            message = "Selected item ${event.item}"
+                        )
+                    )
+                }
+            }
             is AddEditAlbumEvent.ChangeTitleFocus -> {
                 _albumTitle.value = albumTitle.value.copy(
                     isHintVisible = !event.focusState.isFocused &&
@@ -107,6 +127,7 @@ class AddEditAlbumViewModel @Inject constructor(
                         )
                         _eventFlow.emit(UiEvent.SaveAlbum)
                     } catch(e: InvalidAlbumException) {
+                        //ToDo check it
                         _eventFlow.emit(
                             UiEvent.ShowSnackbar(
                                 message = e.message ?: "Couldn't save album"
