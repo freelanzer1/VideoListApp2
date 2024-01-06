@@ -29,6 +29,6 @@ fun VideoListScreen(
 
 
     ExtendedTheme {
-        VerticalPager(items = videoState.toList(), addUpVideoList =  updateVM)
+        VerticalPager(mediaItems = videoState.toList(), addUpVideoList =  updateVM)
     }
 }

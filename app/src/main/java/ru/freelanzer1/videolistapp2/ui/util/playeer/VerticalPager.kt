@@ -5,6 +5,9 @@ import androidx.compose.animation.core.*
 import androidx.compose.foundation.*
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
@@ -30,19 +33,18 @@ import coil.request.ImageRequest
 import ru.freelanzer1.videolistapp2.ui.theme.*
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import ru.freelanzer1.videeolistapp2.R
+import ru.freelanzer1.videolistapp2.R
 import ru.freelanzer1.videolistapp2.domain.model.Image
 import ru.freelanzer1.videolistapp2.domain.model.MediaItem
 import ru.freelanzer1.videolistapp2.domain.model.Video
 import ru.freelanzer1.videolistapp2.ui.util.audioAndVideo
 import ru.freelanzer1.videolistapp2.ui.util.extension.Space
-import ru.freelanzer1.videolistapp2.ui.util.photo
 
 @Preview
 @Composable
 fun PlayerScreen_Preview() {
     ExtendedTheme {
-        VerticalPager(items = audioAndVideo)
+        VerticalPager(mediaItems = audioAndVideo)
     }
 }
 
@@ -52,7 +54,7 @@ fun PlayerScreen_Preview() {
 @Composable
 fun VerticalPager(
     modifier: Modifier = Modifier,
-    items: List<MediaItem>,
+    mediaItems: List<MediaItem>,
     initialPage: Int? = 0,
     addUpVideoList: (() -> Unit)? = null
 //    showUploadDate: Boolean = false,
@@ -75,7 +77,7 @@ fun VerticalPager(
     )
 
     VerticalPager(
-        pageCount = items.size,
+        pageCount = mediaItems.size,
         state = pagerState,
         flingBehavior = fling,
         beyondBoundsPageCount = 1,
@@ -92,9 +94,11 @@ fun VerticalPager(
             )
         }
 
-        Box(modifier = Modifier.fillMaxSize().background(color = Color.Black)) {
+        Box(modifier = Modifier
+            .fillMaxSize()
+            .background(color = Color.Black)) {
 
-            val currentVideo = items[it] as? Video
+            val currentVideo = mediaItems[it] as? Video
             if (currentVideo != null) {
                 Box (modifier = Modifier.fillMaxWidth()){
                     VideoPlayer(
@@ -104,7 +108,7 @@ fun VerticalPager(
                         },
                         onDoubleTap = { exoPlayer, offset ->
                             coroutineScope.launch {
-                                items[it].currentViewerInteraction.isLikedByYou = true
+                                mediaItems[it].currentViewerInteraction.isLikedByYou = true
                                 val rotationAngle = (-10..10).random()
                                 doubleTapState = Triple(offset, true, rotationAngle.toFloat())
                                 delay(400)
@@ -114,11 +118,11 @@ fun VerticalPager(
                         onVideoDispose = { pauseButtonVisibility = false },
                         onVideoGoBackground = { pauseButtonVisibility = false },
                         addUpVideoList = addUpVideoList,
-                        pageCount = items.size
+                        pageCount = mediaItems.size
                     )
                 }
             }else{
-                val image = items[it] as? Image
+                val image = mediaItems[it] as? Image
                 val painter = rememberAsyncImagePainter(
                     ImageRequest
                         .Builder(LocalContext.current)
@@ -141,7 +145,7 @@ fun VerticalPager(
                 }
             }
 
-            if (pagerState.settledPage == items.size -1 && addUpVideoList != null){
+            if (pagerState.settledPage == mediaItems.size -1 && addUpVideoList != null){
                 addUpVideoList();
             }
 

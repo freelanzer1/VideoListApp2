@@ -18,7 +18,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import ru.freelanzer1.videolistapp2.ui.theme.ExtendedTheme
 import ru.freelanzer1.videolistapp2.ui.video_list.components.OrderSection
 import ru.freelanzer1.videolistapp2.ui.util.Screen
 import ru.freelanzer1.videolistapp2.ui.util.playeer.VerticalPager
@@ -69,7 +68,7 @@ fun MainScreen(
                 .navigationBarsPadding()
                 .imePadding() // padding for the bottom for the IME
                 .fillMaxSize()) {
-                VerticalPager(items = mediaItemsState.toList(), addUpVideoList = addUpVideoList)
+                VerticalPager(mediaItems = mediaItemsState.toList(), addUpVideoList = addUpVideoList)
                 Column(
                     modifier = Modifier
                         .fillMaxSize()

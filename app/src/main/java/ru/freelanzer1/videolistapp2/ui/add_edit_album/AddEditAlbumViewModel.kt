@@ -7,13 +7,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import ru.freelanzer1.videolistapp2.domain.model.InvalidAlbumException
 import ru.freelanzer1.videolistapp2.domain.model.Album
 import ru.freelanzer1.videolistapp2.domain.use_case.AlbumUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
+import org.burnoutcrew.reorderable.ItemPosition
 import javax.inject.Inject
 
 @HiltViewModel
@@ -24,17 +24,10 @@ class AddEditAlbumViewModel @Inject constructor(
 
     private val _albumTitle = mutableStateOf(
         AlbumTextFieldState(
-        hint = "Enter album title..."
+        hint = "Enter album title"
     )
     )
     val albumTitle: State<AlbumTextFieldState> = _albumTitle
-
-    private val _albumContent = mutableStateOf(
-        AlbumTextFieldState(
-        hint = "Enter description"
-    )
-    )
-    val albumContent: State<AlbumTextFieldState> = _albumContent
 
 
     private val _addedFileUris = mutableStateListOf<AlbumMediaItemState>()
@@ -42,6 +35,12 @@ class AddEditAlbumViewModel @Inject constructor(
     fun addElements(items: List<Pair<Uri, String?>>) {
         val itemStateList: List<AlbumMediaItemState> = items.map { AlbumMediaItemState(it.first, it.second)}
         _addedFileUris.addAll(itemStateList)
+    }
+
+    fun replaceElements(from: ItemPosition, to: ItemPosition) {
+        _addedFileUris.apply {
+            add(to.index, removeAt(from.index))
+        }
     }
 
     //private val _albumColor = mutableStateOf(Album.albumColors.random().toArgb())
@@ -62,10 +61,6 @@ class AddEditAlbumViewModel @Inject constructor(
                             text = album.title,
                             isHintVisible = false
                         )
-                        _albumContent.value = _albumContent.value.copy(
-                            text = album.description,
-                            isHintVisible = false
-                        )
                         //_albumColor.value = album.color
                     }
                 }
@@ -83,13 +78,16 @@ class AddEditAlbumViewModel @Inject constructor(
             is AddEditAlbumEvent.SelectItem -> {
                 _addedFileUris[event.item] = _addedFileUris[event.item].copy(selected = event.selected)
 
-                viewModelScope.launch {
-                    _eventFlow.emit(
-                        UiEvent.ShowSnackbar(
-                            message = "Selected item ${event.item}"
-                        )
-                    )
-                }
+//                viewModelScope.launch {
+//                    _eventFlow.emit(
+//                        UiEvent.ShowSnackbar(
+//                            message = "Selected item ${event.item}"
+//                        )
+//                    )
+//                }
+            }
+            is AddEditAlbumEvent.RemoveSelected -> {
+                _addedFileUris.removeIf{ it.selected }
             }
             is AddEditAlbumEvent.ChangeTitleFocus -> {
                 _albumTitle.value = albumTitle.value.copy(
@@ -97,17 +95,8 @@ class AddEditAlbumViewModel @Inject constructor(
                             albumTitle.value.text.isBlank()
                 )
             }
-            is AddEditAlbumEvent.EnteredContent -> {
-                _albumContent.value = _albumContent.value.copy(
-                    text = event.value
-                )
-            }
-            is AddEditAlbumEvent.ChangeContentFocus -> {
-                _albumContent.value = _albumContent.value.copy(
-                    isHintVisible = !event.focusState.isFocused &&
-                            _albumContent.value.text.isBlank()
-                )
-            }
+
+
 //            is AddEditAlbumEvent.ChangeColor -> {
 //                _albumColor.value = event.color
 //            }
@@ -117,7 +106,6 @@ class AddEditAlbumViewModel @Inject constructor(
                         albumUseCases.addAlbum(
                             Album(
                                 title = albumTitle.value.text,
-                                description = albumContent.value.text,
                                 timestamp = System.currentTimeMillis(),
                                 //color = albumColor.value,
                                 id = currentAlbumId,
@@ -126,7 +114,7 @@ class AddEditAlbumViewModel @Inject constructor(
                             )
                         )
                         _eventFlow.emit(UiEvent.SaveAlbum)
-                    } catch(e: InvalidAlbumException) {
+                    } catch(e: Exception) { // or InvalidAlbumException
                         //ToDo check it
                         _eventFlow.emit(
                             UiEvent.ShowSnackbar(

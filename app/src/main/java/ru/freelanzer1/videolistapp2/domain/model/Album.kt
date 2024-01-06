@@ -7,7 +7,6 @@ import androidx.room.PrimaryKey
 @Entity
 data class Album(
     val title: String,
-    val description: String,
     val timestamp: Long,
     //val color: Int,
     val srvId: String?,

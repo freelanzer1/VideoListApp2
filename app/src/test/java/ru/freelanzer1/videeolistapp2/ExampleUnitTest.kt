@@ -1,4 +1,4 @@
-package ru.freelanzer1.videeolistapp2
+package ru.freelanzer1.videolistapp2
 
 import org.junit.Test
 

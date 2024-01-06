@@ -6,7 +6,7 @@
 //import androidx.core.util.Pools
 //import androidx.media3.*
 //import androidx.media3.ui.PlayerView
-//import ru.freelanzer1.videeolistapp2.R
+//import ru.freelanzer1.videolistapp2.R
 //
 //object PlayerViewPool {
 //    @SuppressLint("StaticFieldLeak")

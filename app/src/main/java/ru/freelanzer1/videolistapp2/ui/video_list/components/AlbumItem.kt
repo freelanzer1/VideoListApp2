@@ -67,13 +67,6 @@ fun AlbumItem(
                 overflow = TextOverflow.Ellipsis
             )
             Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = album.description,
-                style = MaterialTheme.typography.bodyLarge,
-                color = MaterialTheme.colorScheme.onSurface,
-                maxLines = 10,
-                overflow = TextOverflow.Ellipsis
-            )
         }
         IconButton(
             onClick = onDeleteClick,

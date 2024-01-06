@@ -4,6 +4,7 @@ import android.net.Uri
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.PlaylistRemove
 import androidx.compose.material.icons.filled.Save
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
@@ -33,16 +34,6 @@ fun AddEditAlbumScreen(
     viewModel: AddEditAlbumViewModel = hiltViewModel()
 ) {
     val titleState = viewModel.albumTitle.value
-    val contentState = viewModel.albumContent.value
-
-    val addedFileUris = remember { viewModel.addedFileUris }
-
-
-
-    val addElements = { items: List<Pair<Uri, String?>>  ->
-        viewModel.addElements(items)
-    }
-
     val snackbarHostState = remember { SnackbarHostState() }
 
 //    val albumBackgroundAnimatable = remember {
@@ -54,12 +45,13 @@ fun AddEditAlbumScreen(
 
     LaunchedEffect(key1 = true) {
         viewModel.eventFlow.collectLatest { event ->
-            when(event) {
+            when (event) {
                 is AddEditAlbumViewModel.UiEvent.ShowSnackbar -> {
                     snackbarHostState.showSnackbar(
                         message = event.message
                     )
                 }
+
                 is AddEditAlbumViewModel.UiEvent.SaveAlbum -> {
                     navController.navigateUp()
                 }
@@ -81,23 +73,27 @@ fun AddEditAlbumScreen(
                     shape = CircleShape,
                     //containerColor = MaterialTheme.colorScheme.primary
                 ) {
-                    Icon(imageVector = Icons.Default.Save, contentDescription = "Save album")
+                    Icon(
+                        imageVector = Icons.Default.Save,
+                        contentDescription = "Save album"
+                    )
                 }
             }
         },
         snackbarHost = { SnackbarHost(snackbarHostState) }
-    ){ padding ->
-        Box(modifier = Modifier
-            //.padding(15.dp)
-            .statusBarsPadding()
-            .navigationBarsPadding()
-            .imePadding() // padding for the bottom for the IME
-            .imeNestedScroll() // scroll IME at the bottom
-            ) {
+    ) { padding ->
+        Box(
+            modifier = Modifier
+                //.padding(15.dp)
+                .statusBarsPadding()
+                .navigationBarsPadding()
+                .imePadding() // padding for the bottom for the IME
+                .imeNestedScroll() // scroll IME at the bottom
+        ) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    //.background(albumBackgroundAnimatable.value)
+                //.background(albumBackgroundAnimatable.value)
             ) {
 //                Row(
 //                    modifier = Modifier
@@ -150,27 +146,7 @@ fun AddEditAlbumScreen(
                     textStyle = MaterialTheme.typography.headlineMedium
                 )
                 Spacer(modifier = Modifier.height(16.dp))
-                TransparentHintTextField(
-                    modifier = Modifier.padding(horizontal = 15.dp),
-                    text = contentState.text,
-                    hint = contentState.hint,
-                    onValueChange = {
-                        viewModel.onEvent(AddEditAlbumEvent.EnteredContent(it))
-                    },
-                    onFocusChange = {
-                        viewModel.onEvent(AddEditAlbumEvent.ChangeContentFocus(it))
-                    },
-                    isHintVisible = contentState.isHintVisible,
-                    textStyle = MaterialTheme.typography.bodyMedium,
-                    //modifier = Modifier.fillMaxHeight()
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-                FilePickerComponent(
-                    addedFileUris, addElements,
-                    selectItem = { pos: Int, selected: Boolean ->
-                        viewModel.onEvent(AddEditAlbumEvent.SelectItem(pos, selected))
-                    }
-                )
+                FilePickerComponent( viewModel)
             }
         }
     }

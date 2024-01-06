@@ -1,4 +1,4 @@
-package ru.freelanzer1.videeolistapp2.ui.theme
+package ru.freelanzer1.videolistapp2.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
